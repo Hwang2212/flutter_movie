@@ -128,7 +128,12 @@ class _HomeState extends State<Home> {
         if (model.hasData) {
           return top5MovieList(model.data);
         } else {
-          return CircularProgressIndicator();
+          return Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                "Loading Data",
+                style: TextStyle(fontSize: 20, color: Colors.white38),
+              ));
         }
       },
     );
@@ -327,7 +332,12 @@ class _HomeState extends State<Home> {
         if (allmovies.hasData) {
           return allMovieList(allmovies.data);
         } else {
-          return Center(child: CircularProgressIndicator());
+          return Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                "Loading Data",
+                style: TextStyle(fontSize: 20, color: Colors.white38),
+              ));
         }
       },
     );
