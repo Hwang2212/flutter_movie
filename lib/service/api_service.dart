@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:flutter_movie/config.dart';
+import 'package:flutter_movie/utils/constant.dart';
 import 'package:flutter_movie/model/favourite_movie_model.dart';
 import 'package:flutter_movie/model/movie_model.dart';
 import 'package:http_parser/http_parser.dart';
@@ -14,81 +14,83 @@ class APIService {
   static Future<List<MovieModel>?> getMovies() async {
     Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
 
-    var url = Uri.http(Config.apiURL, Config.movieURL);
+    var response = await http.get(Uri.parse(Constant.apiURL + Constant.apiKey),
+        headers: requestHeaders);
 
-    var response = await client.get(url, headers: requestHeaders);
-
+    // print(response.body);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
+      var finalData = data["results"];
 
-      return moviesFromJson(data);
+      return moviesFromJson(finalData);
     } else {
       return null;
     }
   }
 
   // Get Top 5 Movie by Popularity List
-  static Future<List<MovieModel>?> getTop5Movies() async {
-    Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
+  // static Future<List<MovieModel>?> getTop5Movies() async {
+  //   Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
 
-    var url = Uri.http(Config.apiURL, Config.movieURL + "/top5");
+  //   var url = Uri.http(Constant.apiURL +
+  //       "/3/movie/popular?api_key=9c9576f8c2e86949a3220fcc32ae2fb6");
 
-    var response = await client.get(url, headers: requestHeaders);
+  //   var response = await client.get(url, headers: requestHeaders);
 
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
+  //   if (response.statusCode == 200) {
+  //     var data = jsonDecode(response.body);
 
-      return moviesFromJson(data);
-    } else {
-      return null;
-    }
-  }
+  //     return moviesFromJson(data);
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
-  // Get Favourite List
-  static Future<List<FavouriteMovieModel>?> getFavouriteMovies() async {
-    Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
+  // // Get Favourite List
+  // static Future<List<FavouriteMovieModel>?> getFavouriteMovies() async {
+  //   Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
 
-    var url = Uri.http(Config.apiURL, Config.movieURL + "/favourites");
+  //   var url = Uri.http(Constant.apiURL, Constant.movieURL + "/favourites");
 
-    var response = await client.get(url, headers: requestHeaders);
+  //   var response = await client.get(url, headers: requestHeaders);
 
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
+  //   if (response.statusCode == 200) {
+  //     var data = jsonDecode(response.body);
 
-      return favmoviesFromJson(data);
-    } else {
-      return null;
-    }
-  }
+  //     return favmoviesFromJson(data);
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
   // Add Movie to Favourite List
-  static Future<bool> addToFavourite(movie_id) async {
-    Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
-    var movieId = jsonEncode({"movie_id": movie_id.toString()});
-    var url = Uri.http(Config.apiURL, Config.movieURL + "/addfavourite");
-    var response =
-        await client.post(url, headers: requestHeaders, body: movieId);
+  // static Future<bool> addToFavourite(movie_id) async {
+  //   Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
+  //   var movieId = jsonEncode({"movie_id": movie_id.toString()});
+  //   var url = Uri.http(Constant.apiURL, Constant.movieURL + "/addfavourite");
+  //   var response =
+  //       await client.post(url, headers: requestHeaders, body: movieId);
 
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
-  // Delete Movie from Favourite List by ID
-  static Future<bool> deleteFavourite(id) async {
-    Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
-    var url = Uri.http(
-        Config.apiURL, Config.movieURL + "/favourites/" + id.toString());
-    var movieId = jsonEncode({"id": id.toString()});
-    var response =
-        await client.delete(url, headers: requestHeaders, body: movieId);
+  // // Delete Movie from Favourite List by ID
+  // static Future<bool> deleteFavourite(id) async {
+  //   Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
+  //   var url = Uri.http(
+  //       Constant.apiURL, Constant.movieURL + "/favourites/" + id.toString());
+  //   var movieId = jsonEncode({"id": id.toString()});
+  //   var response =
+  //       await client.delete(url, headers: requestHeaders, body: movieId);
 
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 }
