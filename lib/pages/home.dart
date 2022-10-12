@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_movie/model/movie_model.dart';
-
+import 'package:flutter_movie/provider/favourite_provider.dart';
+import 'package:flutter_movie/utils/global.dart';
+import 'package:flutter_movie/utils/parse_data_helper.dart';
+import 'package:flutter_movie/utils/parse_data_helper.dart';
+import 'package:flutter_movie/utils/global.dart' as screensize;
 import '../service/api_service.dart';
 import 'package:flutter_movie/pages/movieprofile.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key, this.model, this.allmovie}) : super(key: key);
@@ -18,6 +23,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<FavouriteMovieProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -32,23 +38,10 @@ class _HomeState extends State<Home> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              "Popular Movies",
-              style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(147, 255, 255, 255)),
-            ),
-            SizedBox(
-              height: 4.0,
-            ),
-            SizedBox(
-              height: 300,
-              child: loadTop5Movies(),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
+            // SizedBox(
+            //   height: 300,
+            //   child: loadTop5Movies(),
+            // ),
             Text(
               "Check out Other Movies",
               textAlign: TextAlign.start,
@@ -57,7 +50,9 @@ class _HomeState extends State<Home> {
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(147, 255, 255, 255)),
             ),
-            SizedBox(height: 500, child: loadAllMovies())
+            SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: loadAllMovies())
           ],
         ),
       ),
@@ -118,27 +113,6 @@ class _HomeState extends State<Home> {
         });
   }
 
-  Widget loadTop5Movies() {
-    return FutureBuilder(
-      future: APIService.getTop5Movies(),
-      builder: (
-        BuildContext context,
-        AsyncSnapshot<List<MovieModel>?> model,
-      ) {
-        if (model.hasData) {
-          return top5MovieList(model.data);
-        } else {
-          return Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                "Loading Data",
-                style: TextStyle(fontSize: 20, color: Colors.white38),
-              ));
-        }
-      },
-    );
-  }
-
 // LOAD ALL MOVIES
   Widget allMovieList(movies) {
     return ListView.builder(
@@ -146,18 +120,12 @@ class _HomeState extends State<Home> {
       itemCount: movies.length,
       itemBuilder: (context, index) {
         // Formatting Language
-        var language = movies[index].original_language;
-        if (language == "en") {
-          language = "English";
-        } else if (language == "ja") {
-          language = "Japanese";
-        } else if (language == "te") {
-          language = "Telugu";
-        }
-        // Formatting Dates
-        DateTime releaseDate =
-            DateFormat("yyyy-MM-dd").parse(movies[index].release_date);
-        String newDate = DateFormat("yyyy-MM-dd").format(releaseDate);
+        var language =
+            ParseData().convertLanguage(movies[index].original_language);
+
+        // Format Datetime
+        var newDate =
+            ParseData().convertDatetimeFormat(movies[index].release_date);
         return InkWell(
           onTap: () {
             Navigator.push(
@@ -266,8 +234,8 @@ class _HomeState extends State<Home> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           InkWell(
-                            onTap: () async {
-                              await APIService.addToFavourite(movies[index].id);
+                            onTap: (){
+                              provider.toggle
                               showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
@@ -296,7 +264,9 @@ class _HomeState extends State<Home> {
                             width: 10,
                           ),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+
+                            },
                             child: Container(
                               child: Icon(
                                 Icons.share,
