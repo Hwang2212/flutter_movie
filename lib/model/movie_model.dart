@@ -39,7 +39,7 @@ class MovieModel {
   });
 
   MovieModel.fromJson(Map<String, dynamic> json) {
-    id = int.parse(json['id']);
+    id = json['id'];
     backdrop_path = json['backdrop_path'];
     original_language = json['original_language'];
     original_title = json['original_title'];
@@ -49,7 +49,7 @@ class MovieModel {
     release_date = json['release_date'];
     title = json['title'];
     video = json['video'];
-    genre_ids = json['genre_ids'];
+    genre_ids = json['genre_ids'].toString();
     adult = json['adult'];
     vote_count = json['vote_count'];
     movie_id = json['movie_id'];
