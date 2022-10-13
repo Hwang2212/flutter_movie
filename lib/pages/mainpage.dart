@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_movie/pages/home.dart';
-import 'package:flutter_movie/pages/favouritelist.dart';
+import 'package:flutter_movie/pages/favourite_list.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class _MainPageState extends State<MainPage> {
 
   static const List<Widget> _pages = <Widget>[
     Home(),
-    // FavouriteList(),
+    FavouriteList(),
     Text('//TODO: Add User Activity ')
   ];
 

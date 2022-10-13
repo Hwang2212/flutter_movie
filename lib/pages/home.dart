@@ -23,7 +23,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<FavouriteMovieProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -59,62 +58,11 @@ class _HomeState extends State<Home> {
     );
   }
 
-// LOAD 5 MOST POPULAR MOVIES
-  Widget top5MovieList(movies) {
-    return ListView.builder(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: movies.length,
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          MovieProfile(movie: movies[index])));
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  child: Stack(alignment: Alignment.center, children: [
-                    Container(
-                      constraints: BoxConstraints(minHeight: 300),
-                      padding: EdgeInsetsDirectional.only(start: 4, end: 4),
-                      child: Image.network("https://image.tmdb.org/t/p/w500/" +
-                          movies[index].poster_path),
-                    ),
-                    Container(
-                      width: 200,
-                      padding: const EdgeInsets.all(5.0),
-                      alignment: Alignment.bottomCenter,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: <Color>[
-                            Colors.black.withAlpha(0),
-                            Colors.black12,
-                            Color.fromARGB(255, 0, 0, 0)
-                          ],
-                        ),
-                      ),
-                      child: Text(
-                        movies[index].title,
-                        style: TextStyle(color: Colors.white, fontSize: 20.0),
-                      ),
-                    ),
-                  ]),
-                )
-              ],
-            ),
-          );
-        });
-  }
+//
 
 // LOAD ALL MOVIES
   Widget allMovieList(movies) {
+    final provider = Provider.of<FavouriteMovieProvider>(context);
     return ListView.builder(
       shrinkWrap: true,
       itemCount: movies.length,
@@ -234,8 +182,8 @@ class _HomeState extends State<Home> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           InkWell(
-                            onTap: (){
-                              provider.toggle
+                            onTap: () {
+                              provider.toggleFavouriteMovie(movies[index]);
                               showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
@@ -248,25 +196,21 @@ class _HomeState extends State<Home> {
                                         ],
                                       ));
                             },
-                            child: Container(
-                              child: Icon(
-                                Icons.favorite,
-                                color: Colors.white30,
-                              ),
-                              padding: EdgeInsets.only(
-                                  left: 10, right: 10, top: 10, bottom: 10),
-                              decoration: BoxDecoration(
-                                  color: Color.fromARGB(26, 255, 255, 255),
-                                  borderRadius: BorderRadius.circular(5)),
-                            ),
+                            child: provider.isFavourite(movies[index])
+                                ? Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                  )
+                                : Icon(
+                                    Icons.favorite,
+                                    color: Colors.white30,
+                                  ),
                           ),
                           SizedBox(
                             width: 10,
                           ),
                           InkWell(
-                            onTap: () {
-
-                            },
+                            onTap: () {},
                             child: Container(
                               child: Icon(
                                 Icons.share,
@@ -313,3 +257,57 @@ class _HomeState extends State<Home> {
     );
   }
 }
+
+// LOAD 5 MOST POPULAR MOVIES
+//   Widget top5MovieList(movies) {
+//     return ListView.builder(
+//         shrinkWrap: true,
+//         scrollDirection: Axis.horizontal,
+//         itemCount: movies.length,
+//         itemBuilder: (context, index) {
+//           return InkWell(
+//             onTap: () {
+//               Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                       builder: (context) =>
+//                           MovieProfile(movie: movies[index])));
+//             },
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Flexible(
+//                   child: Stack(alignment: Alignment.center, children: [
+//                     Container(
+//                       constraints: BoxConstraints(minHeight: 300),
+//                       padding: EdgeInsetsDirectional.only(start: 4, end: 4),
+//                       child: Image.network("https://image.tmdb.org/t/p/w500/" +
+//                           movies[index].poster_path),
+//                     ),
+//                     Container(
+//                       width: 200,
+//                       padding: const EdgeInsets.all(5.0),
+//                       alignment: Alignment.bottomCenter,
+//                       decoration: BoxDecoration(
+//                         gradient: LinearGradient(
+//                           begin: Alignment.topCenter,
+//                           end: Alignment.bottomCenter,
+//                           colors: <Color>[
+//                             Colors.black.withAlpha(0),
+//                             Colors.black12,
+//                             Color.fromARGB(255, 0, 0, 0)
+//                           ],
+//                         ),
+//                       ),
+//                       child: Text(
+//                         movies[index].title,
+//                         style: TextStyle(color: Colors.white, fontSize: 20.0),
+//                       ),
+//                     ),
+//                   ]),
+//                 )
+//               ],
+//             ),
+//           );
+//         });
+//   }
