@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_movie/model/movie_model.dart';
 import 'package:flutter_movie/provider/favourite_provider.dart';
 import 'package:flutter_movie/provider/movies_provider.dart';
-import 'package:flutter_movie/utils/global.dart';
 import 'package:flutter_movie/utils/parse_data_helper.dart';
-import 'package:flutter_movie/utils/global.dart' as screensize;
 import 'package:flutter_movie/utils/widget_helpers.dart';
-import '../service/api_service.dart';
 import 'package:flutter_movie/pages/movieprofile.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key, this.model, this.allmovie}) : super(key: key);
-  final MovieModel? model;
-  final MovieModel? allmovie;
+  const Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -68,7 +61,7 @@ class _HomeState extends State<Home> {
     return Consumer<MovieProvider>(builder: ((context, value, child) {
       final movies = value.movies; // Store movie data in var movies
 
-      return value.isLoading //If Loading show
+      return value.isLoading //If Loading show loading widget
           ? Center(child: showLoadingIndicator())
           : ListView.builder(
               shrinkWrap: true,
@@ -116,7 +109,7 @@ class _HomeState extends State<Home> {
                               const SizedBox(
                                 height: 25,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 250,
                                 child: Text(
                                   movies[index].title!,
@@ -210,37 +203,28 @@ class _HomeState extends State<Home> {
                                               ));
                                     },
                                     child: provider.isFavourite(movies[index])
-                                        ? const Icon(
+                                        ? iconButton(const Icon(
                                             Icons.favorite,
                                             color: Colors.red,
-                                          )
-                                        : const Icon(
-                                            Icons.favorite,
-                                            color: Colors.white30,
+                                          ))
+                                        : iconButton(
+                                            const Icon(
+                                              Icons.favorite,
+                                              color: Colors.white30,
+                                            ),
                                           ),
                                   ),
                                   const SizedBox(
                                     width: 10,
                                   ),
                                   InkWell(
-                                    onTap: () {},
-                                    child: Container(
-                                      padding: const EdgeInsets.only(
-                                          left: 10,
-                                          right: 10,
-                                          top: 10,
-                                          bottom: 10),
-                                      decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              26, 255, 255, 255),
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      child: const Icon(
-                                        Icons.share,
-                                        color: Colors.white30,
-                                      ),
-                                    ),
-                                  ),
+                                      onTap: () {},
+                                      child: iconButton(
+                                        const Icon(
+                                          Icons.share,
+                                          color: Colors.white30,
+                                        ),
+                                      )),
                                 ],
                               ),
                             ],

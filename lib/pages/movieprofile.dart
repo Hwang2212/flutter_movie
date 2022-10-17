@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter_movie/provider/favourite_provider.dart';
+import 'package:flutter_movie/utils/widget_helpers.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 
 class MovieProfile extends StatefulWidget {
   const MovieProfile({super.key, required this.movie});
@@ -18,16 +21,18 @@ class _MovieProfileState extends State<MovieProfile> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black,
-          title: Text(
+          title: const Text(
             "Movie Profile",
             style: TextStyle(color: Colors.white),
           ),
         ),
-        backgroundColor: Color.fromARGB(229, 0, 0, 0),
+        backgroundColor: const Color.fromARGB(229, 0, 0, 0),
         body: loadMovieProfile());
   }
 
   Widget loadMovieProfile() {
+    final provider = Provider.of<FavouriteMovieProvider>(context);
+
     // Format Languages
     var language = widget.movie.original_language;
     if (language == "en") {
@@ -59,13 +64,13 @@ class _MovieProfileState extends State<MovieProfile> {
                   colors: <Color>[
                     Colors.black.withAlpha(0),
                     Colors.black12,
-                    Color.fromARGB(255, 0, 0, 0)
+                    const Color.fromARGB(255, 0, 0, 0)
                   ],
                 ),
               ),
             ),
           ]),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Row(
@@ -76,71 +81,83 @@ class _MovieProfileState extends State<MovieProfile> {
                 size: 13,
                 color: Colors.yellow[300],
               ),
-              SizedBox(
+              const SizedBox(
                 width: 3,
               ),
               Text(
                 widget.movie.vote_average.toString() + " / 10.0 ",
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 13, color: Color.fromARGB(129, 255, 255, 255)),
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 1,
           ),
           Text(
             widget.movie.vote_count.toString() + " votes",
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 13, color: Color.fromARGB(129, 255, 255, 255)),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Text(
             widget.movie.title,
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 28, color: Colors.white, fontWeight: FontWeight.bold),
           ),
           Text(
             "Released on " + newDate,
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 13, color: Color.fromARGB(129, 255, 255, 255)),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               InkWell(
-                onTap: () {},
-                child: Container(
-                  child: Icon(
-                    Icons.favorite,
-                    color: Colors.white30,
-                  ),
-                  padding:
-                      EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-                  decoration: BoxDecoration(
-                      color: Color.fromARGB(26, 255, 255, 255),
-                      borderRadius: BorderRadius.circular(5)),
-                ),
+                onTap: () {
+                  provider.toggleFavouriteMovie(widget.movie);
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: const Text('Added to Favourite List'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('OK'))
+                            ],
+                          ));
+                },
+                child: provider.isFavourite(widget.movie)
+                    ? iconButton(const Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                      ))
+                    : iconButton(
+                        const Icon(
+                          Icons.favorite,
+                          color: Colors.white30,
+                        ),
+                      ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 3,
               ),
               InkWell(
                 onTap: () {},
                 child: Container(
-                  child: Icon(
+                  child: const Icon(
                     Icons.share,
                     color: Colors.white30,
                   ),
-                  padding:
-                      EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+                  padding: const EdgeInsets.only(
+                      left: 10, right: 10, top: 10, bottom: 10),
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(26, 255, 255, 255),
+                      color: const Color.fromARGB(26, 255, 255, 255),
                       borderRadius: BorderRadius.circular(5)),
                 ),
               ),
@@ -148,46 +165,47 @@ class _MovieProfileState extends State<MovieProfile> {
           ),
           Text(
             widget.movie.original_title,
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 20, color: Color.fromARGB(129, 255, 255, 255)),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Text(
             widget.movie.overview,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 13, color: Color.fromARGB(129, 255, 255, 255)),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           widget.movie.adult
               ? Container(
-                  padding:
-                      EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 10),
+                  padding: const EdgeInsets.only(
+                      left: 30, right: 30, top: 10, bottom: 10),
                   decoration: BoxDecoration(
                       color: Colors.red,
                       borderRadius: BorderRadius.circular(20)),
-                  child: Text("18+"))
+                  child: const Text("18+"))
               : Container(
-                  padding:
-                      EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 10),
+                  padding: const EdgeInsets.only(
+                      left: 30, right: 30, top: 10, bottom: 10),
                   decoration: BoxDecoration(
                       color: Colors.green[300],
                       borderRadius: BorderRadius.circular(20)),
-                  child: Text(
+                  child: const Text(
                     "Children Friendly",
                   )),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Container(
-            padding: EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 10),
+            padding:
+                const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 10),
             child: Text(
               language,
-              style: TextStyle(color: Colors.white, fontSize: 13),
+              style: const TextStyle(color: Colors.white, fontSize: 13),
             ),
             decoration: BoxDecoration(
                 color: Colors.white38, borderRadius: BorderRadius.circular(10)),

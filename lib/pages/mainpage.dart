@@ -15,7 +15,6 @@ class _MainPageState extends State<MainPage> {
   static const List<Widget> _pages = <Widget>[
     Home(),
     FavouriteList(),
-    Text('//TODO: Add User Activity ')
   ];
 
   void _onItemTapped(int index) {
