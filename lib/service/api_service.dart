@@ -1,11 +1,7 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter_movie/utils/constant.dart';
-import 'package:flutter_movie/model/favourite_movie_model.dart';
 import 'package:flutter_movie/model/movie_model.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
-import 'package:mime/mime.dart';
 
 class APIService {
   static var client = http.Client();
@@ -23,9 +19,8 @@ class APIService {
       var finalData = data["results"];
 
       return moviesFromJson(finalData);
-    } else {
-      return null;
     }
+    throw "Favourite Movies can't be obtained";
   }
 
   // Get Top 5 Movie by Popularity List

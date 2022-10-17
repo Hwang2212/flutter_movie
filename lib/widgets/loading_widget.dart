@@ -8,10 +8,8 @@ class LoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: widgetHelper.showLoadingIndicator(),
-      ),
+    return Center(
+      child: widgetHelper.showLoadingIndicator(),
     );
   }
 }

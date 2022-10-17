@@ -1,16 +1,22 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_movie/model/movie_model.dart';
-// import 'package:flutter_movie/service/api_service.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_movie/model/movie_model.dart';
+import 'package:flutter_movie/service/api_service.dart';
 
-// class AllMovieProvider with ChangeNotifier {
-//   MovieModel allMovies = MovieModel();
-//   bool loading = false;
+// Movie Provider to get all movie data
+class MovieProvider with ChangeNotifier {
+  // final APIService _movieService = APIService.instance;
+  List<MovieModel> _movies = [];
+  List<MovieModel> get movies => _movies;
+  bool isLoading = false;
 
-//   getAllMovie(context) async {
-//     loading = true;
-//     allMovies = await APIService.getMovies(context);
-//     loading = false;
+  Future<void> getAllMovie() async {
+    isLoading = true;
+    notifyListeners();
 
-//     notifyListeners();
-//   }
-// }
+    final response = await APIService.getMovies();
+
+    _movies = response!;
+    isLoading = false;
+    notifyListeners();
+  }
+}

@@ -11,8 +11,7 @@ class ParseData {
         return "Telugu";
       case "fr":
         return "French";
-      case "en":
-        return "English";
+
       default:
         return "";
     }
